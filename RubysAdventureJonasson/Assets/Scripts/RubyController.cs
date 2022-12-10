@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
-    public float speed = 20.0f;
+    public float speed = 3.0f;
 
 
     public int maxHealth = 5;
@@ -15,7 +15,7 @@ public class RubyController : MonoBehaviour
 
 
     bool isInvincible;
-    float invincibleTImer;
+    float invincibleTimer;
 
 
     Rigidbody2D rigidbody2d;
@@ -30,8 +30,19 @@ public class RubyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
+        currentHealth = maxHealth;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Create 2 variables to use the unity built in axes
+        float Horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
 
         Vector2 move = new Vector2(horizontal, vertical);
 
@@ -44,20 +55,11 @@ public class RubyController : MonoBehaviour
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
-        currentHealth = maxHealth;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //Create 2 variables to use the unity built in axes
-        float Horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
 
         if (isInvincible)
         {
-            invincibleTImer -= Time.deltaTime;
-            if (invincibleTImer < 0)
+            invincibleTimer -= Time.deltaTime;
+            if (invincibleTimer < 0)
                 isInvincible = false;
         }
     }
@@ -67,8 +69,8 @@ public class RubyController : MonoBehaviour
             Vector2 position = rigidbody2d.position;
 
             //create horzantal and vertical movement 
-            position.x = position.x + 20.0f * horizontal * Time.deltaTime;
-            position.y = position.y + 20.0f * vertical * Time.deltaTime;
+            position.x = position.x + speed * horizontal * Time.deltaTime;
+            position.y = position.y + speed * vertical * Time.deltaTime;
             //setting the new position
 
             rigidbody2d.MovePosition(position);
@@ -79,16 +81,26 @@ public class RubyController : MonoBehaviour
     {
         if (amount < 0)
         {
-
+            animator.SetTrigger("Hit");
             if (isInvincible)
                 return;
 
             isInvincible = true;
-            invincibleTImer = timeInvincible;
+            invincibleTimer = timeInvincible;
         }
 
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
+    }
+
+    void Launch()
+    {
+        GameObject projectileObject = Instantiate(projectilePrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+        projectile.Launch(lookDirection, 300);
+
+        animator.SetTrigger("Launch");
     }
 }
