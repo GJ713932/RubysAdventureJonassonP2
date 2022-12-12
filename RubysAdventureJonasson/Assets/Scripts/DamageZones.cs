@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DamageZones : MonoBehaviour
 {
-    private void OnTriggerStay2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         RubyController controller = other.GetComponent<RubyController>();
 
@@ -12,6 +12,5 @@ public class DamageZones : MonoBehaviour
         {
             controller.ChangeHealth(-1);
         }
-       
     }
 }
