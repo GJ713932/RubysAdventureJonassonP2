@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour
     int direction = 1;
     bool broken = true;
 
-
     Animator animator;
 
     // Start is called before the first frame update
@@ -26,11 +25,11 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-
-    if(!broken)
-    {
-      return;
-    }
+        //remember ! inverse the test, so if broken is true !broken will be false and return won’t be executed.
+        if (!broken)
+        {
+            return;
+        }
 
         timer -= Time.deltaTime;
 
@@ -43,7 +42,7 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        //remember ! inverse the test, so if broken is true !broken will be false and return won’t be executed.
         if (!broken)
         {
             return;
@@ -77,6 +76,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    //Public because we want to call it from elsewhere like the projectile script
     public void Fix()
     {
         broken = false;

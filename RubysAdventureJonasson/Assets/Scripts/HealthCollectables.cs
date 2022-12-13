@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class HealthCollectables : MonoBehaviour
 {
+
+    public AudioClip collectedClip;
+
+
     void OnTriggerEnter2D(Collider2D other)
     {
         RubyController controller = other.GetComponent<RubyController>();
@@ -14,6 +18,8 @@ public class HealthCollectables : MonoBehaviour
             {
                 controller.ChangeHealth(1);
                 Destroy(gameObject);
+
+                controller.PlaySound(collectedClip);
             }
         }
     }
